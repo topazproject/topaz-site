@@ -19,7 +19,7 @@ class Application(object):
         )
         self.url_map = Map([
             Rule(r"/builds/", endpoint=self.list_builds),
-            Rule(r"/builds/create/", endpoint=self.create_build),
+            Rule(r"/builds/create/", endpoint=self.create_build, methods=["POST"]),
             Rule(r"/<path:page>", endpoint=self.other_page),
         ])
 

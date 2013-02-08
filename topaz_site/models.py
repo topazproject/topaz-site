@@ -24,6 +24,20 @@ class Models(object):
             timestamp=row[self.builds.c.timestamp],
         )
 
+    def create_build(self, sha1, platform, success, timestamp):
+        with self.engine.connect() as conn:
+            result = conn.execute(self.builds.insert().values(
+                sha1=sha1,
+                platform=platform,
+                success=success,
+                timestamp=timestamp
+            ))
+        [id] = result.inserted_primary_key
+        return Build(
+            id=id, sha1=sha1, platform=platform, success=success,
+            timestamp=timestamp
+        )
+
     def get_builds(self):
         with self.engine.connect() as conn:
             query = self.builds.select().order_by(self.builds.c.timestamp.desc())

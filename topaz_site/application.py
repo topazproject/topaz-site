@@ -2,8 +2,9 @@ import os
 
 from jinja2 import Environment, FileSystemLoader
 
-from werkzeug.exceptions import HTTPException
+from werkzeug.exceptions import HTTPException, Forbidden
 from werkzeug.routing import Map, Rule
+from werkzeug.security import safe_str_cmp
 from werkzeug.utils import redirect
 from werkzeug.wrappers import Request, Response
 
@@ -13,6 +14,7 @@ from topaz_site.models import Models
 class Application(object):
     def __init__(self, config):
         super(Application, self).__init__()
+        self.config = config
         self.models = Models(config)
         self.jinja_env = Environment(
             loader=FileSystemLoader(os.path.join(os.path.dirname(__file__), "templates")),
@@ -46,6 +48,8 @@ class Application(object):
         return self.render_template("builds_list.html", builds=builds)
 
     def create_build(self, request):
+        if not safe_str_cmp(request.form["build_secret"], self.config["core"]["build_secret"]):
+            raise Forbidden
         raise NotImplementedError
 
     def other_page(self, request, page):

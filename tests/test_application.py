@@ -1,3 +1,5 @@
+from io import BytesIO
+
 from werkzeug.test import Client
 from werkzeug.wrappers import BaseResponse
 
@@ -8,3 +10,21 @@ class TestApplication(object):
         response = c.get("/some-random/url/")
         assert response.status_code == 302
         assert response.headers["Location"] == "http://docs.topazruby.com"
+
+    def test_create_build_bad_secret(self, application):
+        c = Client(application, BaseResponse)
+        response = c.post("/builds/create/", data={
+            "build_secret": application.config["core"]["build_secret"] + "bar",
+        })
+        assert response.status_code == 403
+
+    def test_create_buid(self, application):
+        c = Client(application, BaseResponse)
+        response = c.post("/builds/create/", data={
+            "build_secret": application.config["core"]["build_secret"],
+            "sha1": "a" * 40,
+            "platform": "osx64",
+            "success": "true",
+            "build": (BytesIO("a build!"), "topaz-osx64-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.tar.bz2"),
+        })
+        assert False

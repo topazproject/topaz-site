@@ -43,3 +43,9 @@ class Application(object):
     def list_builds(self, request):
         builds = self.models.get_builds()
         return self.render_template("builds_list.html", builds=builds)
+
+    def create_build(self, request):
+        raise NotImplementedError
+
+    def other_page(self, request):
+        raise NotImplementedError

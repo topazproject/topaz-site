@@ -1,6 +1,6 @@
 import os
 
-from jina2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader
 
 from werkzeug.exceptions import HTTPException
 from werkzeug.routing import Map, Rule

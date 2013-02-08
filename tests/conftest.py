@@ -34,3 +34,18 @@ def models(request, _models_setup):
             conn.execute(models.builds.delete())
     request.addfinalizer(delete_data)
     return models
+
+
+@pytest.fixture
+def application(request, _models_setup):
+    from topaz_site.application import Application
+    from topaz_site.config import read_config
+
+    config = request.config.getvalueorskip("config")
+    application = Application(read_config(config))
+
+    def delete_data():
+        with application.models.engine.connect() as conn:
+            conn.execute(application.models.builds.delete())
+    request.addfinalizer(delete_data)
+    return application

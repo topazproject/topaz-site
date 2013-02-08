@@ -4,6 +4,7 @@ from jinja2 import Environment, FileSystemLoader
 
 from werkzeug.exceptions import HTTPException
 from werkzeug.routing import Map, Rule
+from werkzeug.utils import redirect
 from werkzeug.wrappers import Request, Response
 
 from topaz_site.models import Models
@@ -47,5 +48,5 @@ class Application(object):
     def create_build(self, request):
         raise NotImplementedError
 
-    def other_page(self, request):
-        raise NotImplementedError
+    def other_page(self, request, page):
+        return redirect("http://docs.topazruby.com")

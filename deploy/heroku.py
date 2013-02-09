@@ -21,9 +21,6 @@ def build_application():
         "database": {
             "uri": os.environ["DATABASE_URL"],
         },
-        "sentry": {
-            "dsn": os.environ["SENTRY_DSN"]
-        }
     }
     app = Application(config)
     app = SharedDataMiddleware(app, {
@@ -31,7 +28,7 @@ def build_application():
     })
     return Sentry(
         app,
-        Client(os.environ["sentry"]["dsn"])
+        Client(os.environ["SENTRY_DSN"])
     )
 
 app = build_application()

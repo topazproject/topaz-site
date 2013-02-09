@@ -16,6 +16,7 @@ def build_application():
         "s3": {
             "aws_access_key_id": os.environ["AWS_ACCESS_KEY_ID"],
             "aws_secret_access_key": os.environ["AWS_SECRET_ACCESS_KEY"],
+            "bucket": "topaz-builds",
         },
         "database": {
             "uri": os.environ["DATABASE_URL"],

@@ -21,7 +21,7 @@ class S3Storage(object):
 
     def save(self, filename, data):
         conn = S3Connection(self.aws_access_key_id, self.aws_secret_access_key)
-        bucket = conn.get_bucket("topaz-builds")
+        bucket = conn.get_bucket(self.bucket)
         k = Key(bucket)
         k.key = filename
         k.set_contents_from_string(data)

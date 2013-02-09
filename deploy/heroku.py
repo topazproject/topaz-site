@@ -18,8 +18,11 @@ def build_application():
             "aws_secret_access_key": os.environ["AWS_SECRET_ACCESS_KEY"],
         },
         "database": {
-            "uri": os.environ['DATABASE_URL'],
+            "uri": os.environ["DATABASE_URL"],
         },
+        "sentry": {
+            "dsn": os.environ["SENTRY_DSN"]
+        }
     }
     app = Application(config)
     app = SharedDataMiddleware(app, {

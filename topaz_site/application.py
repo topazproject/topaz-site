@@ -11,7 +11,7 @@ from werkzeug.utils import redirect
 from werkzeug.wrappers import Request, Response
 
 from topaz_site.models import Models
-from topaz_site.storage import FakeStorage
+from topaz_site.storage import FakeStorage, S3Storage
 
 
 class Application(object):
@@ -27,6 +27,7 @@ class Application(object):
             Rule(r"/builds/", endpoint=self.list_builds),
             Rule(r"/builds/create/", endpoint=self.create_build, methods=["POST"]),
             Rule(r"/<path:page>", endpoint=self.other_page),
+            Rule(r"/", endpoint=self.other_page),
         ])
         if "s3" in config:
             self.storage = S3Storage(config)
@@ -48,7 +49,6 @@ class Application(object):
 
     def render_template(self, template_name, **context):
         t = self.jinja_env.get_template(template_name)
-        context["STATIC_URL"] = self.config["static"]["url"]
         return Response(t.render(context), mimetype="text/html")
 
     def json_response(self, obj, **kwargs):
@@ -72,5 +72,5 @@ class Application(object):
         )
         return self.json_response(build, status=201)
 
-    def other_page(self, request, page):
+    def other_page(self, request, page=None):
         return redirect("http://docs.topazruby.com")

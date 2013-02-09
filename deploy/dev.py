@@ -14,7 +14,7 @@ def main(argv):
     app = Application(config)
     app = DebuggedApplication(app)
     app = SharedDataMiddleware(app, {
-        config["static"]["url"]: os.path.join(os.path.dirname(__file__), os.pardir, "static"),
+        "/static/": os.path.join(os.path.dirname(__file__), os.pardir, "static"),
     })
     run_simple("localhost", 4000, app)
 

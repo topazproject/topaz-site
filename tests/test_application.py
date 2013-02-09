@@ -14,6 +14,12 @@ class TestApplication(object):
         assert response.status_code == 302
         assert response.headers["Location"] == "http://docs.topazruby.com"
 
+    def test_redirect_root(self, application):
+        c = Client(application, BaseResponse)
+        response = c.get("/")
+        assert response.status_code == 302
+        assert response.headers["Location"] == "http://docs.topazruby.com"
+
     def test_create_build_bad_secret(self, application):
         c = Client(application, BaseResponse)
         response = c.post("/builds/create/", data={

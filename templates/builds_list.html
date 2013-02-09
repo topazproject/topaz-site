@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Nightly Builds{% endblock %}
+
+{% block body %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>SHA1</th>
+                <th>Platform</th>
+                <th>Build time</th>
+                <th>Download</th>
+                <th>Success</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for build in builds %}
+                <tr class="{% if build.success %}success{% else %}error{% endif %}">
+                    <td>
+                        <a href="https://github.com/topazproject/topaz/commit/{{ build.sha1 }}">{{ build.sha1 }}</a>
+                    </td>
+                    <td>{{ build.platform }}</td>
+                    <td>{{ build.timestamp }} UTC</td>
+                    <td>
+                        <a href="{{ BUILD_URL }}{{ build.filename }}">Download!</a>
+                    </td>
+                    <td>
+                        <i class="{% if build.success %}icon-ok{% else %}icon-ban-circle{% endif %}"></i>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

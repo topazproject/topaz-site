@@ -20,7 +20,7 @@ class Application(object):
         self.config = config
         self.models = Models(config)
         self.jinja_env = Environment(
-            loader=FileSystemLoader(os.path.join(os.path.dirname(__file__), "templates")),
+            loader=FileSystemLoader(os.path.join(os.path.dirname(__file__), os.pardir, "templates")),
             autoescape=True
         )
         self.url_map = Map([
@@ -48,6 +48,7 @@ class Application(object):
 
     def render_template(self, template_name, **context):
         t = self.jinja_env.get_template(template_name)
+        context["STATIC_URL"] = self.config["static"]["url"]
         return Response(t.render(context), mimetype="text/html")
 
     def json_response(self, obj, **kwargs):

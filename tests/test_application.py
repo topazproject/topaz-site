@@ -1,3 +1,4 @@
+import datetime
 from io import BytesIO
 
 from sqlalchemy.sql import select, func
@@ -32,3 +33,16 @@ class TestApplication(object):
         assert response.status_code == 201
         assert application.models.engine.execute(select([func.count(application.models.builds.c.id)])).fetchone() == (1,)
         assert application.storage.files["topaz-osx64-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.tar.bz2"] == "a build!"
+
+    def test_list_builds(self, application):
+        c = Client(application, BaseResponse)
+        response = c.get("/builds/")
+        assert response.status_code == 200
+
+        application.models.create_build(
+            sha1="a" * 40, platform="osx64", success=True,
+            timestamp=datetime.datetime.utcnow(), filename="abc"
+        )
+        response = c.get("/builds/")
+        assert response.status_code == 200
+        assert "a" * 40 in response.data

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html land="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Topaz | {% block title %}{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" />
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.css" />
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/site.css" />
+        <!--[if lt IE 9]>
+            <script src="{{ STATIC_URL }}js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="container-narrow">
+            <div class="masthead">
+                <h3 class="muted">Topaz Nightly Builds</h3>
+            </div>
+            <hr />
+            {% block body %}{% endblock %}
+            <div class="footer">
+                <p>
+                    &copy; Alex Gaynor and individual contributors.
+                    <a href="http://github.com/topazproject/topaz-site">Open Source Software</a>
+                </p>
+            </div>
+        </div>
+    </body>
+</html>

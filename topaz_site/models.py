@@ -12,6 +12,7 @@ class Models(object):
             Column("platform", Unicode),
             Column("success", Boolean),
             Column("timestamp", DateTime),
+            Column("filename", String),
         )
         self.engine = create_engine(config["database"]["uri"])
 
@@ -22,36 +23,47 @@ class Models(object):
             platform=row[self.builds.c.platform],
             success=row[self.builds.c.success],
             timestamp=row[self.builds.c.timestamp],
+            filename=row[self.builds.c.filename],
         )
 
-    def create_build(self, sha1, platform, success, timestamp):
-        with self.engine.connect() as conn:
-            result = conn.execute(self.builds.insert().values(
-                sha1=sha1,
-                platform=platform,
-                success=success,
-                timestamp=timestamp
-            ))
+    def create_build(self, sha1, platform, success, timestamp, filename):
+        result = self.engine.execute(self.builds.insert().values(
+            sha1=sha1,
+            platform=platform,
+            success=success,
+            timestamp=timestamp,
+            filename=filename
+        ))
         [id] = result.inserted_primary_key
         return Build(
             id=id, sha1=sha1, platform=platform, success=success,
-            timestamp=timestamp
+            timestamp=timestamp, filename=filename,
         )
 
     def get_builds(self):
-        with self.engine.connect() as conn:
-            query = self.builds.select().order_by(self.builds.c.timestamp.desc())
-            return [
-                self._build_from_row(row)
-                for row in conn.execute(query)
-            ]
+        query = self.builds.select().order_by(self.builds.c.timestamp.desc())
+        return [
+            self._build_from_row(row)
+            for row in self.engine.execute(query)
+        ]
 
 
 class Build(object):
-    def __init__(self, id, sha1, platform, success, timestamp):
+    def __init__(self, id, sha1, platform, success, timestamp, filename):
         super(Build, self).__init__()
         self.id = id
         self.sha1 = sha1
         self.platform = platform
         self.success = success
         self.timestamp = timestamp
+        self.filename = filename
+
+    def to_json(self):
+        return {
+            "id": self.id,
+            "sha1": self.sha1,
+            "platform": self.platform,
+            "success": self.success,
+            "timestamp": self.timestamp.isoformat(),
+            "filename": self.filename,
+        }

@@ -1,5 +1,7 @@
 from io import BytesIO
 
+from sqlalchemy.sql import select, func
+
 from werkzeug.test import Client
 from werkzeug.wrappers import BaseResponse
 
@@ -27,4 +29,6 @@ class TestApplication(object):
             "success": "true",
             "build": (BytesIO("a build!"), "topaz-osx64-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.tar.bz2"),
         })
-        assert False
+        assert response.status_code == 201
+        assert application.models.engine.execute(select([func.count(application.models.builds.c.id)])).fetchone() == (1,)
+        assert application.storage.files["topaz-osx64-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.tar.bz2"] == "a build!"

@@ -29,3 +29,34 @@ class TestModels(object):
         assert build.success == True
         assert build.timestamp == timestamp
         assert build.filename == "abc"
+
+    def test_get_platforms(self, models):
+        timestamp = datetime.datetime.utcnow()
+        models.create_build(
+            sha1="a" * 40, platform="osx64", success=True, timestamp=timestamp,
+            filename="abc"
+        )
+        models.create_build(
+            sha1="a" * 40, platform="osx64", success=True, timestamp=timestamp,
+            filename="abc"
+        )
+        models.create_build(
+            sha1="a" * 40, platform="osx32", success=True, timestamp=timestamp,
+            filename="abc"
+        )
+
+        assert models.get_platforms() == ["osx64", "osx32"]
+
+    def test_get_builds_for_platform(self, models):
+        timestamp = datetime.datetime.utcnow()
+        osx64 = models.create_build(
+            sha1="a" * 40, platform="osx64", success=True, timestamp=timestamp,
+            filename="abc"
+        )
+        osx32 = models.create_build(
+            sha1="a" * 40, platform="osx32", success=True, timestamp=timestamp,
+            filename="abc"
+        )
+
+        assert models.get_builds(platform="osx32") == [osx32]
+        assert models.get_builds() == [osx64, osx32]

@@ -52,3 +52,18 @@ class TestApplication(object):
         response = c.get("/builds/")
         assert response.status_code == 200
         assert "a" * 40 in response.data
+
+    def test_list_platform_builds(self, application):
+        application.models.create_build(
+            sha1="a" * 40, platform="osx64", success=True,
+            timestamp=datetime.datetime.utcnow(), filename="abc"
+        )
+        application.models.create_build(
+            sha1="b" * 40, platform="osx32", success=True,
+            timestamp=datetime.datetime.utcnow(), filename="abc"
+        )
+
+        c = Client(application, BaseResponse)
+        response = c.get("/builds/osx32/")
+        assert response.status_code == 200
+        assert "a" * 40 not in response.data

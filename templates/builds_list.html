@@ -3,6 +3,12 @@
 {% block title %}Nightly Builds{% endblock %}
 
 {% block body %}
+    <div class="btn-group">
+        <a href="/builds/" class="btn{% if not current_platform %} active{% endif %}">All Platforms</a>
+        {% for platform in platforms %}
+            <a href="/builds/{{ platform }}/" class="btn{% if platform == current_platform %} active{% endif %}">{{ platform }}</a>
+        {% endfor %}
+    </div>
     <table class="table table-bordered">
         <thead>
             <tr>

@@ -1,5 +1,6 @@
 from sqlalchemy import (MetaData, Table, Column, Boolean, Integer, String,
     Unicode, DateTime, create_engine)
+from sqlalchemy.sql import select, func
 
 
 class Models(object):
@@ -40,10 +41,25 @@ class Models(object):
             timestamp=timestamp, filename=filename,
         )
 
-    def get_builds(self):
+    def get_builds(self, platform=None):
         query = self.builds.select().order_by(self.builds.c.timestamp.desc())
+        if platform is not None:
+            query = query.where(self.builds.c.platform == platform)
         return [
             self._build_from_row(row)
+            for row in self.engine.execute(query)
+        ]
+
+    def get_platforms(self):
+        query = select([
+            self.builds.c.platform, func.count(self.builds.c.id)
+        ]).group_by(
+            self.builds.c.platform
+        ).order_by(
+            func.count(self.builds.c.id).desc()
+        )
+        return [
+            row[self.builds.c.platform]
             for row in self.engine.execute(query)
         ]
 
@@ -57,6 +73,11 @@ class Build(object):
         self.success = success
         self.timestamp = timestamp
         self.filename = filename
+
+    def __eq__(self, other):
+        if not isinstance(other, Build):
+            return NotImplemented
+        return self.id == other.id
 
     def to_json(self):
         return {

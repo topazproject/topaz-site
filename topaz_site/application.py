@@ -26,6 +26,7 @@ class Application(object):
         self.url_map = Map([
             Rule(r"/builds/", endpoint=self.list_builds),
             Rule(r"/builds/create/", endpoint=self.create_build, methods=["POST"]),
+            Rule(r"/builds/<platform>/", endpoint=self.list_builds),
             Rule(r"/<path:page>", endpoint=self.other_page),
             Rule(r"/", endpoint=self.other_page),
         ])
@@ -55,9 +56,14 @@ class Application(object):
         kwargs["content_type"] = "application/json"
         return Response(json.dumps(obj.to_json()), **kwargs)
 
-    def list_builds(self, request):
-        builds = self.models.get_builds()
-        return self.render_template("builds_list.html", builds=builds)
+    def list_builds(self, request, platform=None):
+        builds = self.models.get_builds(platform=platform)
+        platforms = self.models.get_platforms()
+        return self.render_template("builds_list.html",
+            builds=builds,
+            platforms=platforms,
+            current_platform=platform,
+        )
 
     def create_build(self, request):
         if not safe_str_cmp(request.form["build_secret"], self.config["core"]["build_secret"]):

@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="/static/css/bootstrap-responsive.css" />
         <link rel="stylesheet" href="/static/css/site.css" />
         <!--[if lt IE 9]>
-            <script src="/static/js/html5shiv.js"></script>
+            <script type="text/javascript" src="/static/js/html5shiv.js"></script>
         <![endif]-->
     </head>
     <body>
@@ -26,5 +26,6 @@
                 </p>
             </div>
         </div>
+        {% block extra_js %}{% endblock %}
     </body>
 </html>

@@ -20,7 +20,11 @@
                         <a href="https://github.com/topazproject/topaz/commit/{{ build.sha1 }}">{{ build.sha1 }}</a>
                     </td>
                     <td>{{ build.platform }}</td>
-                    <td>{{ build.timestamp }} UTC</td>
+                    <td>
+                        <abbr title="{{ build.timestamp.isoformat() }}Z" class="timeago">
+                            {{ build.timestamp }} UTC
+                        </abbr>
+                    </td>
                     <td>
                         <a href="http://builds.topazruby.com/{{ build.filename }}">Download!</a>
                     </td>
@@ -31,4 +35,14 @@
             {% endfor %}
         </tbody>
     </table>
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.timeago.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $("abbr.timeago").timeago();
+        })
+    </script>
 {% endblock %}

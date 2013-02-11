@@ -12,6 +12,7 @@ def build_application():
     config = {
         "core": {
             "build_secret": os.environ["BUILD_SECRET"],
+            "freenode_verification": os.environ["FREENODE_VERIFICATION"],
         },
         "s3": {
             "aws_access_key_id": os.environ["AWS_ACCESS_KEY_ID"],

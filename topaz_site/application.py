@@ -27,6 +27,7 @@ class Application(object):
             Rule(r"/builds/", endpoint=self.list_builds),
             Rule(r"/builds/create/", endpoint=self.create_build, methods=["POST"]),
             Rule(r"/builds/<platform>/", endpoint=self.list_builds),
+            Rule(r"/freenode.ver", endpoint=self.freenode_verification),
             Rule(r"/<path:page>", endpoint=self.other_page),
             Rule(r"/", endpoint=self.other_page),
         ])
@@ -80,3 +81,6 @@ class Application(object):
 
     def other_page(self, request, page=None):
         return redirect("http://docs.topazruby.com")
+
+    def freenode_verification(self, request):
+        return Response(self.config["core"]["freenode_verification"])

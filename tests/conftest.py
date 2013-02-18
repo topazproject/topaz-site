@@ -30,8 +30,7 @@ def models(request, _models_setup):
     models = Models(read_config(config))
 
     def delete_data():
-        with models.engine.connect() as conn:
-            conn.execute(models.builds.delete())
+        models.engine.execute(models.builds.delete())
     request.addfinalizer(delete_data)
     return models
 
@@ -45,7 +44,6 @@ def application(request, _models_setup):
     application = Application(read_config(config))
 
     def delete_data():
-        with application.models.engine.connect() as conn:
-            conn.execute(application.models.builds.delete())
+        application.models.engine.execute(application.models.builds.delete())
     request.addfinalizer(delete_data)
     return application

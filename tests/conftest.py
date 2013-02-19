@@ -10,6 +10,11 @@ def pytest_addoption(parser):
     )
 
 
+def delete_all_rows(models):
+    for table in models.metadata.sorted_tables:
+        models.engine.execute(table.delete())
+
+
 @pytest.fixture(scope="session")
 def _models_setup(request):
     from topaz_site.config import read_config
@@ -28,10 +33,7 @@ def models(request, _models_setup):
 
     config = request.config.getvalueorskip("config")
     models = Models(read_config(config))
-
-    def delete_data():
-        models.engine.execute(models.builds.delete())
-    request.addfinalizer(delete_data)
+    request.addfinalizer(lambda: delete_all_rows(models))
     return models
 
 
@@ -42,8 +44,5 @@ def application(request, _models_setup):
 
     config = request.config.getvalueorskip("config")
     application = Application(read_config(config))
-
-    def delete_data():
-        application.models.engine.execute(application.models.builds.delete())
-    request.addfinalizer(delete_data)
+    request.addfinalizer(lambda: delete_all_rows(application.models))
     return application

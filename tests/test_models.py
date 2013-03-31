@@ -1,7 +1,5 @@
 import datetime
 
-from topaz_site.models import Build
-
 
 class TestModels(object):
     def test_create_build(self, models):
@@ -26,9 +24,26 @@ class TestModels(object):
         assert build.id == orig_build.id
         assert build.sha1 == "a" * 40
         assert build.platform == "osx64"
-        assert build.success == True
+        assert build.success
         assert build.timestamp == timestamp
         assert build.filename == "abc"
+
+    def test_get_builds_limit(self, models):
+        b1 = models.create_build(
+            sha1="a" * 40, platform="osx64", success=True, timestamp=datetime.datetime.utcnow(),
+            filename="abc"
+        )
+        b2 = models.create_build(
+            sha1="a" * 40, platform="osx64", success=True, timestamp=datetime.datetime.utcnow(),
+            filename="abc"
+        )
+        b3 = models.create_build(
+            sha1="a" * 40, platform="osx64", success=True, timestamp=datetime.datetime.utcnow(),
+            filename="abc"
+        )
+        assert models.get_builds(limit=3) == [b3, b2, b1]
+        assert models.get_builds(limit=2) == [b3, b2]
+        assert models.get_builds(limit=1) == [b3]
 
     def test_get_platforms(self, models):
         timestamp = datetime.datetime.utcnow()

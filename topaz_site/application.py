@@ -4,7 +4,7 @@ import os
 
 from jinja2 import Environment, FileSystemLoader
 
-from werkzeug.exceptions import HTTPException, Forbidden
+from werkzeug.exceptions import HTTPException, Forbidden, NotFound
 from werkzeug.routing import Map, Rule
 from werkzeug.security import safe_str_cmp
 from werkzeug.utils import redirect
@@ -27,6 +27,7 @@ class Application(object):
             Rule(r"/builds/", endpoint=self.list_builds),
             Rule(r"/builds/create/", endpoint=self.create_build, methods=["POST"]),
             Rule(r"/builds/<platform>/", endpoint=self.list_builds),
+            Rule(r"/builds/<platform>/latest/", endpoint=self.latest_build),
             Rule(r"/freenode.ver", endpoint=self.freenode_verification),
             Rule(r"/<path:page>", endpoint=self.other_page),
             Rule(r"/", endpoint=self.other_page),
@@ -65,6 +66,13 @@ class Application(object):
             platforms=platforms,
             current_platform=platform,
         )
+
+    def latest_build(self, request, platform):
+        builds = self.models.get_builds(platform=platform, limit=1)
+        if not builds:
+            raise NotFound
+        [build] = builds
+        return redirect("http://builds.topazruby.com/%s" % build.filename)
 
     def create_build(self, request):
         if not safe_str_cmp(request.form["build_secret"], self.config["core"]["build_secret"]):

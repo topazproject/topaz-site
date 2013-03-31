@@ -67,3 +67,16 @@ class TestApplication(object):
         response = c.get("/builds/osx32/")
         assert response.status_code == 200
         assert "a" * 40 not in response.data
+
+    def test_latest(self, application):
+        application.models.create_build(
+            sha1="a" * 40, platform="osx64", success=True,
+            timestamp=datetime.datetime.utcnow(), filename="abc"
+        )
+        c = Client(application, BaseResponse)
+        response = c.get("/builds/osx64/latest/")
+        assert response.status_code == 302
+        assert response.headers["Location"] == "http://builds.topazruby.com/abc"
+
+        response = c.get("/builds/osx32/latest/")
+        assert response.status_code == 404

@@ -41,10 +41,12 @@ class Models(object):
             timestamp=timestamp, filename=filename,
         )
 
-    def get_builds(self, platform=None):
+    def get_builds(self, platform=None, limit=None):
         query = self.builds.select().order_by(self.builds.c.timestamp.desc())
         if platform is not None:
             query = query.where(self.builds.c.platform == platform)
+        if limit is not None:
+            query = query.limit(limit)
         return [
             self._build_from_row(row)
             for row in self.engine.execute(query)

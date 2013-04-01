@@ -37,7 +37,7 @@ class TestApplication(object):
             "build": (BytesIO("a build!"), "topaz-osx64-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.tar.bz2"),
         })
         assert response.status_code == 201
-        assert application.models.engine.execute(select([func.count(application.models.builds.c.id)])).fetchone() == (1,)
+        assert application.models.engine.execute(select([func.count(application.models.builds.c.id)])).scalar() == 1
         assert application.storage.files["topaz-osx64-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.tar.bz2"] == "a build!"
 
     def test_list_builds(self, application):

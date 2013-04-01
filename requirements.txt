@@ -1,5 +1,5 @@
 Jinja2==2.6
-SQLAlchemy==0.8.0b2
+SQLAlchemy==0.8.0
 Werkzeug==0.8.3
 boto==2.8.0
 psycopg2==2.4.6

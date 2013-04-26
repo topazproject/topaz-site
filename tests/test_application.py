@@ -23,14 +23,14 @@ class TestApplication(object):
     def test_create_build_bad_secret(self, application):
         c = Client(application, BaseResponse)
         response = c.post("/builds/create/", data={
-            "build_secret": application.config["core"]["build_secret"] + "bar",
+            "build_secret": application.config["core"]["build_secrets"][0] + "bar",
         })
         assert response.status_code == 403
 
     def test_create_buid(self, application):
         c = Client(application, BaseResponse)
         response = c.post("/builds/create/", data={
-            "build_secret": application.config["core"]["build_secret"],
+            "build_secret": application.config["core"]["build_secrets"],
             "sha1": "a" * 40,
             "platform": "osx64",
             "success": "true",

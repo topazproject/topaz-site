@@ -6,12 +6,12 @@ from jinja2 import Environment, FileSystemLoader
 
 from werkzeug.exceptions import HTTPException, Forbidden, NotFound
 from werkzeug.routing import Map, Rule
-from werkzeug.security import safe_str_cmp
 from werkzeug.utils import redirect
 from werkzeug.wrappers import Request, Response
 
 from topaz_site.models import Models
 from topaz_site.storage import FakeStorage, S3Storage
+from topaz_site.utils import multi_constant_time_compare
 
 
 class Application(object):
@@ -36,6 +36,7 @@ class Application(object):
             self.storage = S3Storage(config)
         else:
             self.storage = FakeStorage(config)
+        self.build_secrets = config["core"]["build_secrets"].split(",")
 
     def __call__(self, environ, start_response):
         request = Request(environ)
@@ -75,7 +76,7 @@ class Application(object):
         return redirect("http://builds.topazruby.com/%s" % build.filename)
 
     def create_build(self, request):
-        if not safe_str_cmp(request.form["build_secret"], self.config["core"]["build_secret"]):
+        if not multi_constant_time_compare(request.form["build_secret"], self.build_secrets):
             raise Forbidden
         self.storage.save(request.files["build"].filename, request.files["build"].read())
         build = self.models.create_build(

@@ -11,7 +11,7 @@ from topaz_site.application import Application
 def build_application():
     config = {
         "core": {
-            "build_secret": os.environ["BUILD_SECRET"],
+            "build_secrets": os.environ["BUILD_SECRETS"],
             "freenode_verification": os.environ["FREENODE_VERIFICATION"],
         },
         "s3": {

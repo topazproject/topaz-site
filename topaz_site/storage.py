@@ -20,9 +20,13 @@ class S3Storage(object):
         self.bucket = config["s3"]["bucket"]
 
     def save(self, filename, data):
+        print "obtaining s3 conn"
         conn = S3Connection(self.aws_access_key_id, self.aws_secret_access_key)
+        print "hurr, getting a bucket"
         bucket = conn.get_bucket(self.bucket)
         k = Key(bucket)
         k.key = filename
+        print "setting contents"
         k.set_contents_from_string(data)
+        print "setting acl"
         k.set_acl("public-read")

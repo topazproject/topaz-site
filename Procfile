@@ -1,1 +1,1 @@
-web: gunicorn -w3 deploy.heroku:app
+web: gunicorn -w3 -t60 deploy.heroku:app

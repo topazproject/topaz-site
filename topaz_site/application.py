@@ -60,7 +60,6 @@ class Application(object):
         return Response(json.dumps(obj.to_json()), **kwargs)
 
     def list_builds(self, request, platform=None):
-        print "accessed latest builds"
         builds = self.models.get_builds(platform=platform)
         platforms = self.models.get_platforms()
         return self.render_template("builds_list.html",

@@ -60,7 +60,6 @@ class Application(object):
         return Response(json.dumps(obj.to_json()), **kwargs)
 
     def list_builds(self, request, platform=None):
-        print "accessed latest builds"
         builds = self.models.get_builds(platform=platform)
         platforms = self.models.get_platforms()
         return self.render_template("builds_list.html",
@@ -80,7 +79,10 @@ class Application(object):
         print "accessed create build"
         if not multi_constant_time_compare(request.form["build_secret"], self.build_secrets):
             raise Forbidden
-        self.storage.save(request.files["build"].filename, request.files["build"].read())
+        print "constant time compare success"
+        data = request.files["build"].read()
+        print "data read"
+        self.storage.save(request.files["build"].filename, data)
         build = self.models.create_build(
             sha1=request.form["sha1"],
             platform=request.form["platform"],

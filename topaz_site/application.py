@@ -76,11 +76,7 @@ class Application(object):
         return redirect("http://builds.topazruby.com/%s" % build.filename)
 
     def create_build(self, request):
-        print "accessed create build"
-        build_secret = request.form["build_secret"]
-        print "read build secret"
-        if not multi_constant_time_compare(build_secret, self.build_secrets):
-            print "constant time compare failure"
+        if not multi_constant_time_compare(request.form["build_secret"], self.build_secrets):
             raise Forbidden
         print "constant time compare success"
         data = request.files["build"].read()

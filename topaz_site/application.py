@@ -77,7 +77,10 @@ class Application(object):
 
     def create_build(self, request):
         print "accessed create build"
-        if not multi_constant_time_compare(request.form["build_secret"], self.build_secrets):
+        build_secret = request.form["build_secret"]
+        print "read build secret"
+        if not multi_constant_time_compare(build_secret, self.build_secrets):
+            print "constant time compare failure"
             raise Forbidden
         print "constant time compare success"
         data = request.files["build"].read()

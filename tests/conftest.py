@@ -37,12 +37,18 @@ def models(request, _models_setup):
     return models
 
 
+@pytest.fixture(params=range(2))
+def _storage_cls(request):
+    from topaz_site.storage import FakeStorage, DiskStorage
+    return [FakeStorage, DiskStorage][request.param]
+
+
 @pytest.fixture
-def application(request, _models_setup):
+def application(request, _models_setup, _storage_cls):
     from topaz_site.application import Application
     from topaz_site.config import read_config
 
     config = request.config.getvalueorskip("config")
-    application = Application(read_config(config))
+    application = Application(read_config(config), _storage_cls)
     request.addfinalizer(lambda: delete_all_rows(application.models))
     return application

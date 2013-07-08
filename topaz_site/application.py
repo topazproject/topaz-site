@@ -15,7 +15,7 @@ from topaz_site.utils import multi_constant_time_compare
 
 
 class Application(object):
-    def __init__(self, config):
+    def __init__(self, config, storage_cls):
         super(Application, self).__init__()
         self.config = config
         self.models = Models(config)
@@ -32,10 +32,7 @@ class Application(object):
             Rule(r"/<path:page>", endpoint=self.other_page),
             Rule(r"/", endpoint=self.other_page),
         ])
-        if "s3" in config:
-            self.storage = S3Storage(config)
-        else:
-            self.storage = FakeStorage(config)
+        self.storage = storage_cls(config)
         self.build_secrets = config["core"]["build_secrets"].split(",")
 
     def __call__(self, environ, start_response):

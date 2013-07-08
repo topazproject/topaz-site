@@ -6,6 +6,7 @@ from raven.middleware import Sentry
 from werkzeug.wsgi import SharedDataMiddleware
 
 from topaz_site.application import Application
+from topaz_site.storage import S3Storage
 
 
 def build_application():
@@ -23,7 +24,7 @@ def build_application():
             "uri": os.environ["DATABASE_URL"],
         },
     }
-    app = Application(config)
+    app = Application(config, S3Storage)
     app = SharedDataMiddleware(app, {
         "/static/": os.path.join(os.path.dirname(__file__), os.pardir, "static"),
     })

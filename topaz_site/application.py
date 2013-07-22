@@ -10,7 +10,6 @@ from werkzeug.utils import redirect
 from werkzeug.wrappers import Request, Response
 
 from topaz_site.models import Models
-from topaz_site.storage import FakeStorage, S3Storage
 from topaz_site.utils import multi_constant_time_compare
 
 

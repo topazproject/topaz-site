@@ -1,5 +1,7 @@
-from sqlalchemy import (MetaData, Table, Column, Boolean, Integer, String,
-    Unicode, DateTime, create_engine)
+from sqlalchemy import (
+    MetaData, Table, Column, Boolean, Integer, String, Unicode, DateTime,
+    create_engine
+)
 from sqlalchemy.sql import select, func
 
 
@@ -7,7 +9,8 @@ class Models(object):
     def __init__(self, config):
         super(Models, self).__init__()
         self.metadata = MetaData()
-        self.builds = Table("builds", self.metadata,
+        self.builds = Table(
+            "builds", self.metadata,
             Column("id", Integer, primary_key=True),
             Column("sha1", String(40)),
             Column("platform", Unicode),

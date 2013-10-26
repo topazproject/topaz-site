@@ -30,15 +30,24 @@ class TestModels(object):
 
     def test_get_builds_limit(self, models):
         b1 = models.create_build(
-            sha1="a" * 40, platform="osx64", success=True, timestamp=datetime.datetime.utcnow(),
+            sha1="a" * 40,
+            platform="osx64",
+            success=True,
+            timestamp=datetime.datetime.utcnow(),
             filename="abc"
         )
         b2 = models.create_build(
-            sha1="a" * 40, platform="osx64", success=True, timestamp=datetime.datetime.utcnow(),
+            sha1="a" * 40,
+            platform="osx64",
+            success=True,
+            timestamp=datetime.datetime.utcnow(),
             filename="abc"
         )
         b3 = models.create_build(
-            sha1="a" * 40, platform="osx64", success=True, timestamp=datetime.datetime.utcnow(),
+            sha1="a" * 40,
+            platform="osx64",
+            success=True,
+            timestamp=datetime.datetime.utcnow(),
             filename="abc"
         )
         assert models.get_builds(limit=3) == [b3, b2, b1]
@@ -48,15 +57,24 @@ class TestModels(object):
     def test_get_platforms(self, models):
         timestamp = datetime.datetime.utcnow()
         models.create_build(
-            sha1="a" * 40, platform="osx64", success=True, timestamp=timestamp,
+            sha1="a" * 40,
+            platform="osx64",
+            success=True,
+            timestamp=timestamp,
             filename="abc"
         )
         models.create_build(
-            sha1="a" * 40, platform="osx64", success=True, timestamp=timestamp,
+            sha1="a" * 40,
+            platform="osx64",
+            success=True,
+            timestamp=timestamp,
             filename="abc"
         )
         models.create_build(
-            sha1="a" * 40, platform="osx32", success=True, timestamp=timestamp,
+            sha1="a" * 40,
+            platform="osx32",
+            success=True,
+            timestamp=timestamp,
             filename="abc"
         )
 
@@ -65,11 +83,17 @@ class TestModels(object):
     def test_get_builds_for_platform(self, models):
         timestamp = datetime.datetime.utcnow()
         osx64 = models.create_build(
-            sha1="a" * 40, platform="osx64", success=True, timestamp=timestamp,
+            sha1="a" * 40,
+            platform="osx64",
+            success=True,
+            timestamp=timestamp,
             filename="abc"
         )
         osx32 = models.create_build(
-            sha1="a" * 40, platform="osx32", success=True, timestamp=timestamp,
+            sha1="a" * 40,
+            platform="osx32",
+            success=True,
+            timestamp=timestamp,
             filename="abc"
         )
 

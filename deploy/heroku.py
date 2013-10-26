@@ -26,7 +26,9 @@ def build_application():
     }
     app = Application(config, S3Storage)
     app = SharedDataMiddleware(app, {
-        "/static/": os.path.join(os.path.dirname(__file__), os.pardir, "static"),
+        "/static/": os.path.join(
+            os.path.dirname(__file__), os.pardir, "static"
+        ),
     })
     return Sentry(
         app,

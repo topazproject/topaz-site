@@ -22,23 +22,27 @@ class TestApplication(object):
 
     def test_create_build_bad_secret(self, application):
         c = Client(application, BaseResponse)
+        secret = application.config["core"]["build_secrets"][0]
         response = c.post("/builds/create/", data={
-            "build_secret": application.config["core"]["build_secrets"][0] + "bar",
+            "build_secret": secret + "bar",
         })
         assert response.status_code == 403
 
     def test_create_buid(self, application):
         c = Client(application, BaseResponse)
+        fname = "topaz-osx64-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.tar.bz2"
         response = c.post("/builds/create/", data={
             "build_secret": application.config["core"]["build_secrets"],
             "sha1": "a" * 40,
             "platform": "osx64",
             "success": "true",
-            "build": (BytesIO("a build!"), "topaz-osx64-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.tar.bz2"),
+            "build": (BytesIO("a build!"), fname),
         })
         assert response.status_code == 201
-        assert application.models.engine.execute(select([func.count(application.models.builds.c.id)])).scalar() == 1
-        assert application.storage.get_content("topaz-osx64-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.tar.bz2") == "a build!"
+        assert application.models.engine.execute(select([
+            func.count(application.models.builds.c.id)
+        ])).scalar() == 1
+        assert application.storage.get_content(fname) == "a build!"
 
     def test_list_builds(self, application):
         c = Client(application, BaseResponse)
@@ -76,7 +80,8 @@ class TestApplication(object):
         c = Client(application, BaseResponse)
         response = c.get("/builds/osx64/latest/")
         assert response.status_code == 302
-        assert response.headers["Location"] == "http://builds.topazruby.com/abc"
+        url = "http://builds.topazruby.com/abc"
+        assert response.headers["Location"] == url
 
         response = c.get("/builds/osx32/latest/")
         assert response.status_code == 404

@@ -19,12 +19,18 @@ class Application(object):
         self.config = config
         self.models = Models(config)
         self.jinja_env = Environment(
-            loader=FileSystemLoader(os.path.join(os.path.dirname(__file__), os.pardir, "templates")),
+            loader=FileSystemLoader(
+                os.path.join(os.path.dirname(__file__), os.pardir, "templates")
+            ),
             autoescape=True
         )
         self.url_map = Map([
             Rule(r"/builds/", endpoint=self.list_builds),
-            Rule(r"/builds/create/", endpoint=self.create_build, methods=["POST"]),
+            Rule(
+                r"/builds/create/",
+                endpoint=self.create_build,
+                methods=["POST"]
+            ),
             Rule(r"/builds/<platform>/", endpoint=self.list_builds),
             Rule(r"/builds/<platform>/latest/", endpoint=self.latest_build),
             Rule(r"/freenode.ver", endpoint=self.freenode_verification),
@@ -58,7 +64,8 @@ class Application(object):
     def list_builds(self, request, platform=None):
         builds = self.models.get_builds(platform=platform)
         platforms = self.models.get_platforms()
-        return self.render_template("builds_list.html",
+        return self.render_template(
+            "builds_list.html",
             builds=builds,
             platforms=platforms,
             current_platform=platform,
@@ -72,9 +79,12 @@ class Application(object):
         return redirect("http://builds.topazruby.com/%s" % build.filename)
 
     def create_build(self, request):
-        if not multi_constant_time_compare(request.form["build_secret"], self.build_secrets):
+        request_secret = request.form["build_secret"]
+        if not multi_constant_time_compare(request_secret, self.build_secrets):
             raise Forbidden
-        self.storage.save(request.files["build"].filename, request.files["build"].read())
+        self.storage.save(
+            request.files["build"].filename, request.files["build"].read()
+        )
         build = self.models.create_build(
             sha1=request.form["sha1"],
             platform=request.form["platform"],

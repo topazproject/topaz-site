@@ -1,1 +1,1 @@
-web: gunicorn -w3 -t60 deploy.heroku:app
+web: twistd -n web --port=$PORT --wsgi=deploy.heroku.app

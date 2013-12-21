@@ -3,6 +3,6 @@ MarkupSafe==0.18
 SQLAlchemy==0.8.4
 Werkzeug==0.9.4
 boto==2.21.0
-gunicorn==18.0
 psycopg2==2.5.1
 raven==3.6.1
+Twisted==13.2.0

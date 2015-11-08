@@ -2,7 +2,7 @@ Jinja2==2.8
 MarkupSafe==0.23
 SQLAlchemy==1.0.9
 Werkzeug==0.10.4
-boto==2.21.0
+boto==2.38.0
 psycopg2==2.6.1
 raven==5.8.1
 Twisted==15.4.0

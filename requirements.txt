@@ -4,5 +4,5 @@ SQLAlchemy==1.0.10
 Werkzeug==0.11.2
 boto==2.38.0
 psycopg2==2.6.1
-raven==5.9.0
+raven==5.9.2
 Twisted==15.5.0

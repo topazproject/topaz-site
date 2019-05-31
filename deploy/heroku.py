@@ -35,4 +35,5 @@ def build_application():
         Client(os.environ["SENTRY_DSN"])
     )
 
+
 app = build_application()

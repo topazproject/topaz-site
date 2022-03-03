@@ -5,4 +5,4 @@ Werkzeug==0.15.3
 boto==2.49.0
 psycopg2==2.8.2
 raven==5.10.2
-Twisted==22.1.0
+Twisted==22.2.0
